@@ -16,42 +16,42 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-#  app:
-#    build:
-#      context: ./back-end
-#      dockerfile: Dockerfile
-#      args:
-#        SERVER_PORT: ${SERVER_PORT}
-#    container_name: projeto-teste1
-#    ports:
-#      - "${SERVER_PORT}:${SERVER_PORT}"
-#    environment:
-#      SERVER_PORT: ${SERVER_PORT}
-#      DB: ${DB}
-#      DB_USER: ${DB_USER}
-#      DB_PASSWORD: ${DB_PASSWORD}
-#      DB_HOST: db
-#      DB_PORT: ${DB_PORT}
-#      BASE_URL: ${BASE_URL}
-#    depends_on:
-#      db:
-#        condition: service_healthy
-#    restart: always
-#
-#  front-end:
-#    build:
-#      context: ./front-end
-#      dockerfile: Dockerfile
-#      args:
-#        NGINX_PORT: ${NGINX_PORT}
-#        BASE_URL: ${BASE_URL}
-#    container_name: front-end
-#    ports:
-#      - "80:${NGINX_PORT}"
-#    depends_on:
-#      db:
-#        condition: service_healthy
-#    restart: always
+  app:
+    build:
+      context: ./back-end
+      dockerfile: Dockerfile
+      args:
+        SERVER_PORT: ${SERVER_PORT}
+    container_name: projeto-teste1
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+    environment:
+      SERVER_PORT: ${SERVER_PORT}
+      DB: ${DB}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: db
+      DB_PORT: ${DB_PORT}
+      BASE_URL: ${BASE_URL}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: always
+
+  front-end:
+    build:
+      context: ./front-end
+      dockerfile: Dockerfile
+      args:
+        NGINX_PORT: ${NGINX_PORT}
+        BASE_URL: ${BASE_URL}
+    container_name: front-end
+    ports:
+      - "80:${NGINX_PORT}"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: always
 
 
 
