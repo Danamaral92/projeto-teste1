@@ -1,0 +1,57 @@
+services:
+
+  db:
+    image: mysql:8.4.7
+    environment:
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+    ports:
+      - "${DB_PORT}:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u${DB_USER}", "-p${DB_PASSWORD}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+#  app:
+#    build:
+#      context: ./back-end
+#      dockerfile: Dockerfile
+#      args:
+#        SERVER_PORT: ${SERVER_PORT}
+#    container_name: projeto-teste1
+#    ports:
+#      - "${SERVER_PORT}:${SERVER_PORT}"
+#    environment:
+#      SERVER_PORT: ${SERVER_PORT}
+#      DB: ${DB}
+#      DB_USER: ${DB_USER}
+#      DB_PASSWORD: ${DB_PASSWORD}
+#      DB_HOST: db
+#      DB_PORT: ${DB_PORT}
+#      BASE_URL: ${BASE_URL}
+#    depends_on:
+#      db:
+#        condition: service_healthy
+#    restart: always
+#
+#  front-end:
+#    build:
+#      context: ./front-end
+#      dockerfile: Dockerfile
+#      args:
+#        NGINX_PORT: ${NGINX_PORT}
+#        BASE_URL: ${BASE_URL}
+#    container_name: front-end
+#    ports:
+#      - "80:${NGINX_PORT}"
+#    depends_on:
+#      db:
+#        condition: service_healthy
+#    restart: always
+
+
+

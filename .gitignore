@@ -1,0 +1,6 @@
+/postgres-data/
+/mysql-data/
+/back-end/
+/.env.local
+/.qodo/
+/.idea/
