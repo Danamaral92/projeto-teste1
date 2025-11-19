@@ -2,10 +2,10 @@ FROM maven:3.9.5-eclipse-temurin-21 AS builder
 
 WORKDIR /app
 
-COPY ../back-end/pom.xml .
+COPY ./pom.xml .
 RUN mvn dependency:go-offline
 
-COPY ../back-end/src ./src
+COPY ./src ./src
 
 RUN mvn clean package -DskipTests
 

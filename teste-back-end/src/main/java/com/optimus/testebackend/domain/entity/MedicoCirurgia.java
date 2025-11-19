@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "MEDICO_CIRURGIA")
 @Builder
-
 public class MedicoCirurgia {
 
     @EmbeddedId

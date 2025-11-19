@@ -13,6 +13,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/instrumentos")
+@CrossOrigin(origins = "*")
 public class InstrumentoController {
 
     private final InstrumentoService instrumentoService;

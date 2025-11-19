@@ -1,6 +1,7 @@
 package com.optimus.testebackend.controller;
 
 
+import com.optimus.testebackend.domain.dto.CirurgiaCreateDTO;
 import com.optimus.testebackend.domain.dto.CirurgiaDTO;
 import com.optimus.testebackend.service.CirurgiaService;
 import jakarta.validation.Valid;
@@ -36,7 +37,7 @@ public class CirurgiaController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<CirurgiaDTO> saveCirurgia(@RequestBody @Valid CirurgiaDTO cirurgia) {
+    public ResponseEntity<CirurgiaDTO> saveCirurgia(@RequestBody @Valid CirurgiaCreateDTO cirurgia) {
         Optional<CirurgiaDTO> cirurgiaDTO = cirurgiaService.saveCirurgia(cirurgia);
         return cirurgiaDTO.map(dto ->
                 ResponseEntity.status(HttpStatus.OK).body(dto)).orElseGet(() ->

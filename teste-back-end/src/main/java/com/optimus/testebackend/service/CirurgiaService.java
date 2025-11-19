@@ -1,24 +1,21 @@
 package com.optimus.testebackend.service;
 
 
+import com.optimus.testebackend.domain.dto.CirurgiaCreateDTO;
 import com.optimus.testebackend.domain.dto.CirurgiaDTO;
 import com.optimus.testebackend.domain.dto.InstrumentoDTO;
 import com.optimus.testebackend.domain.dto.MedicoDTO;
-import com.optimus.testebackend.domain.entity.Cirurgia;
-import com.optimus.testebackend.domain.entity.Instrumento;
-import com.optimus.testebackend.domain.entity.Medico;
-import com.optimus.testebackend.domain.entity.MedicoCirurgia;
+import com.optimus.testebackend.domain.entity.*;
 import com.optimus.testebackend.domain.mapper.CirurgiaMapper;
 import com.optimus.testebackend.domain.mapper.MedicoMapper;
-import com.optimus.testebackend.domain.repository.CirurgiaRepository;
-import com.optimus.testebackend.domain.repository.InstrumentoRepository;
-import com.optimus.testebackend.domain.repository.MedicoCirurgiaRepository;
+import com.optimus.testebackend.domain.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +26,9 @@ public class CirurgiaService {
     private final CirurgiaMapper cirurgiaMapper;
     private final MedicoMapper medicoMapper;
     private final MedicoCirurgiaRepository medicoCirurgiaRepository;
+    private final MedicoRepository medicoRepository;
+    private final InstrumentoRepository instrumentoRepository;
+    private final PacienteRepository pacienteRepository;
 
 
     public List<CirurgiaDTO> getAllCirurgias() {
@@ -43,20 +43,45 @@ public class CirurgiaService {
 
 
     @Transactional
-    public Optional<CirurgiaDTO> saveCirurgia(CirurgiaDTO cirurgiaDTO) {
-        Cirurgia cirurgia = cirurgiaMapper.toEntity(cirurgiaDTO);
-        Optional<CirurgiaDTO> dto = this.getCirurgiaById(cirurgiaRepository.save(cirurgiaMapper.toEntity(cirurgiaDTO)).getId());
-        List<MedicoCirurgia> medicoCirurgia = dto.map( mc-> mc.getMedicos().stream()
-           .map(m -> MedicoCirurgia.builder()
-                   .medico(medicoMapper.toEntity(m))
-                   .cirurgia(cirurgiaMapper.toEntity(mc))
-                   .principal(m.getId().equals(mc.getMedicoPrincipalId()))
-                   .build())
-           .toList()).get();
+    public Optional<CirurgiaDTO> saveCirurgia(CirurgiaCreateDTO cirurgiaDTO) {
+        List<Medico> medicos = cirurgiaDTO.getMedicosId().stream()
+                .map(m -> {
+                    Optional<Medico> medico = medicoRepository.findById(m);
+                    if (medico.isEmpty()) {
+                        throw new RuntimeException("Medico nao encontrado");
+                    }
+                    return medico.get();
+                })
+                .toList();
 
-        medicoCirurgiaRepository.saveAll(medicoCirurgia);
+        List<Instrumento> instrumentos = cirurgiaDTO.getInstrumentosId().stream()
+                .map(i -> {
+                    Optional<Instrumento> instrumento = instrumentoRepository.findById(i);
+                    if (instrumento.isEmpty()) {
+                        throw new RuntimeException("Instrumento nao encontrado");
+                    }
+                    return instrumento.get();
+                })
+                .toList();
+        Paciente paciente = Optional.ofNullable(cirurgiaDTO.getPacienteId()).map(p -> {
+            Optional<Paciente> paci = pacienteRepository.findById(p);
+            if (paci.isEmpty()) {
+                throw new RuntimeException("Paciente nao encontrado");
+            }
+            return paci.get();
+        }).orElse(null);
 
-        return this.getCirurgiaById(cirurgiaRepository.save(cirurgiaMapper.toEntity(cirurgiaDTO)).getId());
+        Cirurgia cirurgia = Cirurgia.builder()
+                .data(cirurgiaDTO.getData())
+                .paciente(paciente)
+                .medicos()
+                .descricao(cirurgiaDTO.getDescricao())
+                .instrumentos(instrumentos)
+                .build();
+
+
+
+        return this.getCirurgiaById(cirurgiaRepository.save(cirurgia).getId());
     }
 
 

@@ -21,8 +21,8 @@ public interface CirurgiaMapper {
 
 //    @AfterMapping
 //    default void afterMap(@MappingTarget Cirurgia target, CirurgiaDTO source) {
-//        target.setMedicosCirurgia(target.getMedicosCirurgia().stream().map(medicoCirurgia ->
-//                medicoCirurgia.setMedico(source)
-//                ));
-//        });
+//        target.setMedicos(source.getMedicos().stream().map(medicoDTO ->
+//                target.
+//                ).toList());
+//        };
 }

@@ -187,7 +187,7 @@ const CirurgiasPage = () => {
                 </table>
             </div>
             <button type="button" className="btn btn-primary" aria-haspopup="dialog" aria-expanded="false"
-                    aria-controls="basic-modal" data-overlay="#fullscreen-modal"> Open modal
+                    aria-controls="basic-modal" data-overlay="#fullscreen-modal"> Adicionar Cirurgia
             </button>
 
             <div id="fullscreen-modal"
@@ -196,7 +196,7 @@ const CirurgiasPage = () => {
                 <div className="modal-dialog max-w-none">
                     <div className="modal-content h-full max-h-none justify-between">
                         <div className="modal-header">
-                            <h3 className="modal-title">Dialog Title</h3>
+                            <h3 className="modal-title">Cadastro de Cirurgia</h3>
                             <button type="button" className="btn btn-text btn-circle btn-sm absolute end-3 top-3"
                                     aria-label="Close" data-overlay="#fullscreen-modal">
                                 <span className="icon-[tabler--x] size-4"></span>

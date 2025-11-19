@@ -1,8 +1,7 @@
 import {useEffect, useState} from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {Cirurgia} from "@/types/Cirurgia.ts";
+// import { zodResolver } from "@hookform/resolvers/zod";
 import {Medico} from "@/types/Medico.ts";
 import {Instrumento} from "@/types/Instrumento.ts";
 import {Paciente} from "@/types/Paciente.ts";
@@ -10,6 +9,7 @@ import {listAllPacientes} from "@/services/PacienteService.ts";
 import {listAllMedicos} from "@/services/MedicoService.ts";
 import {listAllInstrumentos} from "@/services/InstrumentoService.ts";
 import {createCirurgia} from "@/services/CirurgiaService.ts";
+import {CirurgiaCreate} from "@/types/CirurgiaCreate.ts";
 
 const schema = z.object({
     id: z.number().nullable(),
@@ -73,14 +73,13 @@ const CirurgiaForm = () => {
 
     }, []);
     const onSubmit = async (values: FormValues) => {
-        const payload: Cirurgia = {
-            id: undefined,
+        const payload: CirurgiaCreate = {
             data: new Date(values.data),
-            paciente: pacientes.find(p => p.id.toString() === values.pacienteId.toString())!,
+            pacienteId: values.pacienteId!,
             descricao: values.descricao,
             medicoPrincipalId: values.medicoPrincipalId,
-            medicos: medicos.filter(m => (values.medicosIds ?? []).includes(m.id)),
-            instrumentos: instrumentos.filter(i => (values.instrumentosIds ?? []).includes(i.id)),
+            medicosId: values.medicosIds ?? [],
+            instrumentosId: values.instrumentosIds ?? [],
         };
 
         await createCirurgia(payload)
@@ -158,7 +157,7 @@ const CirurgiaForm = () => {
                 </div>
 
                 <div className="flex items-center justify-end gap-2 pt-4">
-                    <button type="submit" className="button button-primary">Salvar</button>
+                    <button type="submit" className="btn btn-primary">Salvar</button>
                 </div>
             </form>
         </div>
