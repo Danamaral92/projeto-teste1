@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 
 @Entity
@@ -36,8 +37,7 @@ public class Cirurgia {
     @Size(max = 180)
     private String descricao;
 
-    @OneToMany(mappedBy = "cirurgia")
-    private List<MedicoCirurgia> medicos;
+//    private List<MedicoCirurgia> medicos;
 
     @ManyToMany
     @JoinTable(
@@ -47,8 +47,8 @@ public class Cirurgia {
     )
     private List<Instrumento> instrumentos;
 
-    @Nullable
-    public Integer getMedicoPrincipalId() {
-        return medicos.stream().filter(m -> m.getPrincipal()).findFirst().orElse(null).getMedico().getId();
-    }
+//    @Nullable
+//    public Integer getMedicoPrincipalId() {
+//        return Objects.requireNonNull(medicos.stream().filter(MedicoCirurgia::getPrincipal).findFirst().orElse(null)).getMedicoId();
+//    }
 }

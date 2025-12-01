@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,10 +33,28 @@ public class CirurgiaService {
 
 
     public List<CirurgiaDTO> getAllCirurgias() {
-        return cirurgiaRepository.findAll().stream()
+        List<CirurgiaDTO> cirurgias = cirurgiaRepository.findAll().stream()
                 .map(cirurgiaMapper::toDTO)
                 .toList();
+
+        return cirurgias.stream().peek(c -> {
+            List<MedicoCirurgia> medicoCirurgia = medicoCirurgiaRepository.getByCirurgiaId(c.getId());
+            if (medicoCirurgia.isEmpty()) {
+                throw new RuntimeException("A relação Médico Cirurgia não foi encontrada");
+            }
+            List<MedicoDTO> medicos = medicoCirurgia.stream().map(cm -> {
+                Medico medico = medicoRepository.findById(cm.getMedicoId()).orElse(null);
+                if (cm.getPrincipal()) {
+                    c.setMedicoPrincipalId(medico.getId());
+                }
+                return medicoMapper.toDTO(medico);
+            }).toList();
+
+            c.setMedicos(medicos);
+
+        }).toList();
     }
+
 
     public Optional<CirurgiaDTO> getCirurgiaById(Integer id) {
         return cirurgiaRepository.findById(id).map(cirurgiaMapper::toDTO);
@@ -74,7 +93,6 @@ public class CirurgiaService {
         Cirurgia cirurgia = Cirurgia.builder()
                 .data(cirurgiaDTO.getData())
                 .paciente(paciente)
-                .medicos()
                 .descricao(cirurgiaDTO.getDescricao())
                 .instrumentos(instrumentos)
                 .build();

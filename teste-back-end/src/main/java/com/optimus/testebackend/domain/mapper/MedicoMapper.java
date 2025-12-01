@@ -11,13 +11,13 @@ public interface MedicoMapper {
 
     MedicoDTO toDTO(Medico entity);
 
-    default MedicoDTO toDTO(MedicoCirurgia entity){
-        return toDTO(entity.getMedico());
-    }
-
-    default MedicoCirurgia toMedicoCirurgiaEntity(MedicoDTO dto){
-        return MedicoCirurgia.builder()
-                .medico(toEntity(dto))
-                .build();
-    }
+//    default MedicoDTO toDTO(MedicoCirurgia entity){
+//        return toDTO(entity.getMedico());
+//    }
+//
+//    default MedicoCirurgia toMedicoCirurgiaEntity(MedicoDTO dto){
+//        return MedicoCirurgia.builder()
+//                .medico(toEntity(dto))
+//                .build();
+//    }
 }

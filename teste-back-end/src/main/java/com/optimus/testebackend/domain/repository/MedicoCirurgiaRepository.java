@@ -1,15 +1,51 @@
 package com.optimus.testebackend.domain.repository;
 
+
+
 import com.optimus.testebackend.domain.entity.MedicoCirurgia;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
+@Repository
+public class MedicoCirurgiaRepository{
+    private final JdbcTemplate jdbcTemplate;
 
-public interface MedicoCirurgiaRepository extends JpaRepository<MedicoCirurgia, MedicoCirurgia.MedicoCirurgiaId> {
+    public MedicoCirurgiaRepository(JdbcTemplate jdbcTemplate){
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
-    @Query(value = "SELECT * FROM MEDICO_CIRURGIA WHERE MECI_ID_CIRURGIA = :cirurgiaId", nativeQuery = true)
-    List<MedicoCirurgia> findByCirurgiaId(@Param("cirurgiaId") Integer cirurgiaId);
+    public List<MedicoCirurgia> getAllMedicoCirurgia(){
+        String sql = "SELECT * FROM medico_cirurgia";
+
+        return jdbcTemplate.query(sql, ((rs, rowNum) ->
+                new MedicoCirurgia(
+                        rs.getInt("MECI_ID_MEDICO"),
+                        rs.getInt("MECI_ID_CIRURGIA"),
+                        rs.getBoolean("MECI_NR_FLAG_PRINCIPAL")
+                )
+                ));
+    }
+
+
+    public List<MedicoCirurgia> getByCirurgiaId(Integer id){
+        String sql = "SELECT * FROM medico_cirurgia WHERE MECI_ID_CIRURGIA= ?";
+
+        return jdbcTemplate.query(sql, ps -> ps.setInt(1, id), ((rs, rowNum) ->
+                new MedicoCirurgia(
+                        rs.getInt("MECI_ID_MEDICO"),
+                        rs.getInt("MECI_ID_CIRURGIA"),
+                        rs.getBoolean("MECI_NR_FLAG_PRINCIPAL")
+                )
+        ));
+    }
+
+
+    public int inserirMedicoCirurgia(Integer medicoId, Integer cirurgiaId, boolean isPrincipal) {
+        String sql = "INSERT INTO medico_cirurgia(MECI_ID_MEDICO, MECI_ID_CIRURGIA, MECI_NR_FLAG_PRINCIPAL) VALUES (?, ?, ?)";
+        return jdbcTemplate.update(sql, medicoId, cirurgiaId);
+    }
+
+
 
 }

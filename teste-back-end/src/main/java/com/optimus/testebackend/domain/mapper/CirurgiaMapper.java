@@ -14,10 +14,10 @@ public interface CirurgiaMapper {
     Cirurgia toEntity(CirurgiaDTO dto);
     CirurgiaDTO toDTO(Cirurgia entity);
 
-    @AfterMapping
-    default void afterMap(@MappingTarget CirurgiaDTO target, Cirurgia source) {
-        target.setMedicoPrincipalId(source.getMedicoPrincipalId());
-    }
+//    @AfterMapping
+//    default void afterMap(@MappingTarget CirurgiaDTO target, Cirurgia source) {
+//        target.setMedicoPrincipalId(source.getMedicoPrincipalId());
+//    }
 
 //    @AfterMapping
 //    default void afterMap(@MappingTarget Cirurgia target, CirurgiaDTO source) {
